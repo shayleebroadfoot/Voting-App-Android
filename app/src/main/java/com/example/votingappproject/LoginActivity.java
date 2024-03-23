@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//Test 1
 public class LoginActivity extends AppCompatActivity {
 
     TextView txtSignUp;
