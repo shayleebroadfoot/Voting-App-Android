@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gold">#DFC578</color>
+    <color name="alice">#F4FAFF</color>
+    <color name="platinum">#DEE7E7</color>
+    <color name="purple">#B7ADCF</color>
+    <color name="blue">#4F646F</color>
+    <color name="dpurple">#CFBFF7</color>
+    <color name="grey">#535657</color>
+    <color name="skyblue">#022C7F</color>
+
+</resources>

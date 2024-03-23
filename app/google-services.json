@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "903879880706",
+    "firebase_url": "https://votingapp-6475d-default-rtdb.firebaseio.com",
+    "project_id": "votingapp-6475d",
+    "storage_bucket": "votingapp-6475d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903879880706:android:bcdc0518edb1e91348771b",
+        "android_client_info": {
+          "package_name": "com.example.votingappproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtrKjcoKYFasQGFqsSnzNDJudLFP_mkVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
