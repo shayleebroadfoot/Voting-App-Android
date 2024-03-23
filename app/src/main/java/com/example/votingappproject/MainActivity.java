@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity { // Hey you!!
     //private EditText textUser;
     //private EditText textPw;
     private Button bContinue;
