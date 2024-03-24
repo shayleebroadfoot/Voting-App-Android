@@ -137,12 +137,13 @@
         android:layout_margin="10dp"
         android:layout_marginTop="40dp"
         android:fontFamily="sans-serif-black"
+        android:onClick="displayLogin"
         android:text="LogIn"
+
         android:textColor="@color/dpurple"
-
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
 
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.881"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SignUpButton" />

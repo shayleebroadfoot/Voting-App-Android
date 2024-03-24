@@ -4,21 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.example.votingappproject.model.User;
 
-public class SignupActivity extends AppCompatActivity {
 
-    //TextView txtSignIn;
-    FirebaseDatabase database;
-    int initialId = 0;
-
-    DatabaseReference databaseReference_user;
-
+public class SignupActivity extends AppCompatActivity
+{
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference_user;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -36,7 +35,14 @@ public class SignupActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance("https://votingapp-6475d-default-rtdb.firebaseio.com/");
         databaseReference_user = database.getReference("Users");
-        databaseReference_user.child(newUser.toString()).setValue(newUser);
+        databaseReference_user.child(newUser.toString()).setValue(newUser)
+            .addOnSuccessListener(aVoid -> {
+                showToast("New user created successfully");
+            })
+            .addOnFailureListener(e -> {
+                showToast("Failed to add user to database :(" + e.getMessage());
+                Log.e("SignupActivity", "Failed to add user to database", e);
+            });
 
         displayDashboard();
     }
@@ -44,6 +50,20 @@ public class SignupActivity extends AppCompatActivity {
     public void displayDashboard()
     {
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void showToast(String message)
+    {
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, message, duration);
+        toast.show();
+    }
+
+    public void displayLogin(View view)
+    {
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
