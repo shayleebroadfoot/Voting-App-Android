@@ -12,7 +12,7 @@
 
 
     <Button
-        android:id="@+id/btnDisplay"
+        android:id="@+id/SignUpButton"
         android:layout_width="471dp"
         android:layout_height="153dp"
         android:layout_marginBottom="188dp"
