@@ -1,48 +1,191 @@
 package com.example.votingappproject;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity { // Hey you!!
-    //private EditText textUser;
-    //private EditText textPw;
-    private Button bContinue;
-    //private TextView loginStatus;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.votingappproject.Model.Task;
+import com.example.votingappproject.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private List<Task> pollList = new ArrayList<>();
+    private ArrayAdapter<Task> itemsAdapter;
+    private int initialID = 0;
+    private DatabaseReference databaseReference_polls;
+    private ListView listView;
+
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //textUser =(EditText) findViewById(R.id.userName);
-        //textPw = (EditText) findViewById(R.id.password);
-        bContinue = (Button) findViewById(R.id.btnContinue);
-        //loginStatus = (TextView) findViewById(R.id.lgStat);
+        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pollList);
+        //itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, pollList);
+        listView = findViewById(R.id.simpleListView);
+        listView.setAdapter(itemsAdapter);
 
-        bContinue.setOnClickListener(new View.OnClickListener() {
+        // Initialize Firebase
+        database = FirebaseDatabase.getInstance();
+        databaseReference_polls = database.getReference("Polls");
+
+        loadData();
+
+        // Read existing tasks from Firebase
+        databaseReference_polls.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-                startActivity(intent);
-                //finish();
-//                String un = "Rsol";
-//                String pw = "user";
-//
-//                if (un.equals(textUser.getText().toString()) && pw.equals(textPw.getText().toString())){
-//
-//                    Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    Toast.makeText(MainActivity.this,"Login Failed",Toast.LENGTH_SHORT).show();
-//                }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                pollList.clear();
+
+                for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
+                    Task task = taskSnapshot.getValue(Task.class);
+
+                    itemsAdapter.add(task);
+
+                    //Logging the data from database
+                    Log.d("Main activity", "Task value is: " + task.getDescription());
+                }
+                itemsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("MainActivity", "Failed to read value.", error.toException());
             }
         });
+
+        // Handle item clicks in the ListView
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+                Task selectedTask = pollList.get(position);
+                int newCount = selectedTask.getCount() + 1; // Increment count by 1
+                selectedTask.setCount(newCount);
+                showToast("Voted for Task " + selectedTask.getTaskID());
+
+                // Update count in Firebase
+                databaseReference_polls.child(selectedTask.getTaskID()).setValue(selectedTask)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("MainActivity", "Task count updated successfully");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("MainActivity", "Error updating task count in Firebase", e);
+                            }
+                        });
+                //initialID++;
+            }
+        });
+    }
+
+    public void addTask(View view) {
+        EditText taskEditText = findViewById(R.id.taskDescription);
+        String taskDescription = taskEditText.getText().toString();
+
+        DatabaseReference newTaskRef = databaseReference_polls.push(); // Generates unique ID
+        String taskID = newTaskRef.getKey(); // Get the unique key generated by push()
+        int count =0;
+        String Id = String.valueOf(initialID);
+
+        Task newTask = new Task(count, taskID, taskDescription);
+        //Task newTask = new Task(count, Id, taskDescription);
+        newTaskRef.setValue(newTask)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        showToast("Task added successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("MainActivity", "Error adding task to Firebase", e);
+                    }
+                });
+
+        initialID++;
+    }
+
+//    public void addTask(View view) {
+//        EditText taskEditText = findViewById(R.id.taskDescription);
+//        String taskDescription = taskEditText.getText().toString();
+//        int count =0;
+//
+//        Task newTask = new Task(initialID, String.valueOf(initialID), taskDescription);
+//        //DatabaseReference newTaskRef = databaseReference_polls.push(); // Generates unique ID
+//        DatabaseReference newTaskRef = database.getReference("tasks");
+//        newTaskRef.child(newTask.toString()).setValue(newTask);
+//        initialID++;
+//    }
+    //public void loadData (View view){
+    public void loadData (){
+        itemsAdapter.clear();
+        //itemsAdapter.notifyDataSetChanged();
+        //Object listView;
+        // Login to Firebase project and get instance of the DB and point to the root
+        // node of the DB
+        database = FirebaseDatabase.getInstance("https://votingapp-6475d-default-rtdb.firebaseio.com/");
+// Set reference to the Tasks table
+        databaseReference_polls = database.getReference("tasks");
+// Add the new task to DB
+// databaseReference.child(newTask.toString()).setValue(newTask);
+// Read from the database
+
+        databaseReference_polls.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+// This method is called once with the initial value and again
+// whenever data at this location is updated.
+                if (dataSnapshot.exists()) {
+//Check if data read correctly and display message
+                    Toast.makeText(MainActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                    //Looping over all children
+                    for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
+                        Task task = taskSnapshot.getValue(Task.class);
+
+                        itemsAdapter.add(task);
+
+                        //Logging the data from database
+                        Log.d("Main activity", "Task value is: " + task.getDescription());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("Main activity", "Failed to read value.", error.toException());
+            }
+        });
+    }
+    public void showToast(String message) {
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, message, duration);
+        toast.show();
     }
 }

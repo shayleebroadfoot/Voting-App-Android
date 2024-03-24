@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.example.votingappproject.model.User;
+import com.example.votingappproject.Model.User;
 
 public class SignupActivity extends AppCompatActivity {
 
