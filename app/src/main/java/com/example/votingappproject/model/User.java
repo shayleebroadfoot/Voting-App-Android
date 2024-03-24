@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 public class User
 {
-    String username;
-    String password;
+    public String username;
+    public String password;
     public User()
     {
         this.username = "";

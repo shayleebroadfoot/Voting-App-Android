@@ -1,10 +1,19 @@
 package com.example.votingappproject;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
+
+import com.example.votingappproject.model.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity
 {
@@ -25,23 +34,44 @@ public class LoginActivity extends AppCompatActivity
 
     public void verifyLogin(String username, String password)
     {
-        String setUsername = "admin";
-        String setPassword = "0000";
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://votingapp-6475d-default-rtdb.firebaseio.com/");
+        DatabaseReference usersRef = database.getReference("Users");
 
-
-        if (setUsername.equals(username) && setPassword.equals(password))
+        // Query the database for a user with the given username
+        usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener()
         {
-            showToast("Login Successful");
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if user exists
+                if (dataSnapshot.exists()) {
+                    // Get the User object
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user != null && user.getPassword().equals(password)) {
+                        // Passwords match, proceed to login
+                        showToast("Login Successful");
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        // Passwords do not match
+                        showToast("Login Failed");
+                    }
+                } else {
+                    // User does not exist
+                    showToast("Login Failed");
+                }
+            }
 
-        else
-        {
-            showToast("Login Failed");
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting User failed, log a message
+                Log.w("LoginActivity", "loadUser:onCancelled", databaseError.toException());
+                showToast("Database error, login failed.");
+            }
+        });
     }
+
     public void showToast(String message)
     {
         int duration = Toast.LENGTH_SHORT;
@@ -56,57 +86,5 @@ public class LoginActivity extends AppCompatActivity
         finish();
     }
 }
-
-
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import android.annotation.SuppressLint;
-//import android.os.Bundle;
-//import android.view.View;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.TextView;
-//import android.widget.Toast;
-////Test 1
-//public class LoginActivity extends AppCompatActivity {
-//
-//    TextView txtSignUp;
-//    private EditText textUser;
-//    private EditText textPw;
-//    private Button lgIn;
-//    private TextView loginStatus;
-//
-//    @SuppressLint("MissingInflatedId")
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_login);
-//
-//        txtSignUp = findViewById(R.id.txtlogs);
-//        textUser = (EditText) findViewById(R.id.userName);
-//        textPw = (EditText) findViewById(R.id.password);
-//
-//        lgIn = (Button) findViewById(R.id.LoginButton);
-//    }
-
-//        txtSignUp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-//                //startActivity(intent);
-//                //finish();
-//                String un = "Rsol";
-//                String pw = "user";
-//
-//                if (un.equals(textUser.getText().toString()) && pw.equals(textPw.getText().toString())){
-//
-//                    Toast.makeText(LoginActivity.this,"Login Successful",Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    Toast.makeText(LoginActivity.this,"Login Failed",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
 
 
