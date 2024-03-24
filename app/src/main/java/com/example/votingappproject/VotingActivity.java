@@ -25,44 +25,6 @@ import java.util.List;
 
 public class VotingActivity extends AppCompatActivity {
 
-//        TextView Votes1, Votes2, Votes3, Votes4;
-//        Button Button1, Button2, Button3, Button4;
-//        int count1, count2, count3, count4;
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_voting);
-//
-//        Button1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                count1++;
-//                Votes1.setText(String.valueOf(count1));
-//            }
-//        });
-//        Button2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                count2++;
-//                Votes2.setText(String.valueOf(count2));
-//            }
-//        });
-//        Button3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                count3++;
-//                Votes3.setText(String.valueOf(count3));
-//            }
-//        });
-//        Button4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                count4++;
-//                Votes4.setText(String.valueOf(count4));
-//            }
-//        });
-//    }
-
     FirebaseDatabase database;
     private List<Task> pollList = new ArrayList<Task>();
     ArrayAdapter<Task> itemsAdapter;
@@ -72,12 +34,13 @@ public class VotingActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_voting);
 
         itemsAdapter = new ArrayAdapter<Task>(this, android.R.layout.simple_list_item_1, pollList);
         listView = (ListView) findViewById(R.id.simpleListView);
         listView.setAdapter(itemsAdapter);
 
+        EditText editText = findViewById(R.id.taskDescription);
+        editText.setTextColor(getResources().getColor(R.color.alice));
     }
 
     public void addTask(View view) {
@@ -119,34 +82,5 @@ public class VotingActivity extends AppCompatActivity {
                 Log.w("Voting activity", "Failed to read value.", error.toException());
             }
         });
-
     }
-//    public void loadData(View view) {
-//        itemsAdapter.clear();
-//        database = FirebaseDatabase.getInstance("\n" + "https://votingapp-6475d-default-rtdb.firebaseio.com/");
-//// Set reference to the Tasks table
-//        databaseReference_polls = database.getReference("Polls");
-//        databaseReference_polls.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    //Check if data read correctly and display message
-//                    Toast.makeText(VotingActivity.this, "Successful", Toast.LENGTH_SHORT).show();
-//                    //Looping over all children
-//                    for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
-//                        Task task = taskSnapshot.getValue(Task.class);
-//
-//                        itemsAdapter.add(task);
-//                        //Logging the data from database
-//                        Log.d("Voting activity", "Task value is: " + task.getDescription());
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w("Voting activity", "Failed to read value.", error.toException());
-//            }
-//        });
-//    }
 }

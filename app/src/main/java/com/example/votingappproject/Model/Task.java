@@ -1,4 +1,5 @@
 package com.example.votingappproject.Model;
+
 public class Task {
     String taskID;
     String description;
@@ -32,23 +33,40 @@ public class Task {
         this.count = count;
     }
 
-    private String getBlankSpaces(int count) {
+    private int estimateDescriptionWidth(int fontSize) {
+        // Assuming average width of a character for the given font size
+        int averageCharacterWidth = fontSize / 2; // You can adjust this value as needed
+        return description.length() * averageCharacterWidth;
+    }
+    @Override
+    public String toString() {
+        int fontSize = 10; // Font size of the text
+        int descriptionWidth = estimateDescriptionWidth(fontSize);
+        int countXPosition = descriptionWidth + 70; // Move count by 50 pixels from the end of description
+        String paddedCount = getBlankSpaces(countXPosition); // Get blank spaces for padding
+
+        return description + paddedCount + count;
+    }
+
+    private String getBlankSpaces(int pixels) {
         StringBuilder spaces = new StringBuilder();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < pixels; i++) {
             spaces.append(" "); // Add blank spaces
         }
         return spaces.toString();
     }
-    @Override
-    public String toString() {
-        // Assuming you want count to always appear at cell position 20
-        String paddedCount = getBlankSpaces(50 - description.length()); // Get blank spaces for padding
-
-        return description + paddedCount + count;
-    }
+//    private String getBlankSpaces(int count) {
+//        StringBuilder spaces = new StringBuilder();
+//        for (int i = 0; i < count; i++) {
+//            spaces.append(" "); // Add blank spaces
+//        }
+//        return spaces.toString();
+//    }
+//    @Override
 //    public String toString() {
-//        return "task" + taskID + " " + description;
-//    public String toString() {
-//        return description + (20 - description.length()) +count;
+//        // Assuming you want count to always appear at cell position 20
+//        String paddedCount = getBlankSpaces(50 - description.length()); // Get blank spaces for padding
+//
+//        return description + paddedCount + count;
 //    }
 }

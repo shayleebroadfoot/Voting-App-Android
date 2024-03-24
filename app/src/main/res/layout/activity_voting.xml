@@ -40,7 +40,8 @@
             android:id="@+id/simpleListView"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:divider="@color/material_blue_grey_800"
+            android:cacheColorHint="@color/alice"
+            android:divider="@color/alice"
             android:dividerHeight="1dp" />
     </LinearLayout>
 
@@ -50,8 +51,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="Name"
         android:inputType="text"
-        android:text="Name"
+        android:textColorHint="@color/alice"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.087"

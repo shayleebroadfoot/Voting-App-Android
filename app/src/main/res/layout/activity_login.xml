@@ -47,7 +47,7 @@
         android:id="@+id/SignUpButton"
         android:layout_width="150dp"
         android:layout_height="71dp"
-        android:backgroundTint="#32C8BB"
+        android:backgroundTint="@color/purple"
         android:onClick="displayDashboard"
         android:text="Login"
         android:textSize="40sp"
