@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         databaseReference_polls = database.getReference("Polls");
 
+        //I did this
         loadData();
 
         // Read existing tasks from Firebase
