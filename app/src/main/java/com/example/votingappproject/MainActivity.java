@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         databaseReference_polls = database.getReference("Polls");
 
+        //I did this
         loadData();
 
         // Read existing tasks from Firebase
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                                 Log.e("MainActivity", "Error updating task count in Firebase", e);
                             }
                         });
-                //initialID++;
             }
         });
     }
@@ -132,29 +132,13 @@ public class MainActivity extends AppCompatActivity {
         initialID++;
     }
 
-//    public void addTask(View view) {
-//        EditText taskEditText = findViewById(R.id.taskDescription);
-//        String taskDescription = taskEditText.getText().toString();
-//        int count =0;
-//
-//        Task newTask = new Task(initialID, String.valueOf(initialID), taskDescription);
-//        //DatabaseReference newTaskRef = databaseReference_polls.push(); // Generates unique ID
-//        DatabaseReference newTaskRef = database.getReference("tasks");
-//        newTaskRef.child(newTask.toString()).setValue(newTask);
-//        initialID++;
-//    }
-    //public void loadData (View view){
     public void loadData (){
         itemsAdapter.clear();
-        //itemsAdapter.notifyDataSetChanged();
-        //Object listView;
         // Login to Firebase project and get instance of the DB and point to the root
         // node of the DB
         database = FirebaseDatabase.getInstance("https://votingapp-6475d-default-rtdb.firebaseio.com/");
 // Set reference to the Tasks table
         databaseReference_polls = database.getReference("tasks");
-// Add the new task to DB
-// databaseReference.child(newTask.toString()).setValue(newTask);
 // Read from the database
 
         databaseReference_polls.addValueEventListener(new ValueEventListener() {

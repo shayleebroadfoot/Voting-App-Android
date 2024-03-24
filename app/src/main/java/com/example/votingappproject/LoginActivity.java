@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
 
-import com.example.votingappproject.model.User;
+import com.example.votingappproject.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
