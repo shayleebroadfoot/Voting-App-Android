@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 Task selectedTask = pollList.get(position);
                 int newCount = selectedTask.getCount() + 1; // Increment count by 1
                 selectedTask.setCount(newCount);
-                showToast("Voted for Task " + selectedTask.getTaskID());
+                //showToast("Voted for Task " + selectedTask.getTaskID());
+                showToast("Voted for " + selectedTask.getDescription());
 
                 // Update count in Firebase
                 databaseReference_polls.child(selectedTask.getTaskID()).setValue(selectedTask)

@@ -1,4 +1,4 @@
-package com.example.votingappproject.model;
+package com.example.votingappproject.Model;
 
 import androidx.annotation.NonNull;
 

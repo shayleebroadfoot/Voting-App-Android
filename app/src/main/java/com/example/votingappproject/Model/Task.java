@@ -55,18 +55,4 @@ public class Task {
         }
         return spaces.toString();
     }
-//    private String getBlankSpaces(int count) {
-//        StringBuilder spaces = new StringBuilder();
-//        for (int i = 0; i < count; i++) {
-//            spaces.append(" "); // Add blank spaces
-//        }
-//        return spaces.toString();
-//    }
-//    @Override
-//    public String toString() {
-//        // Assuming you want count to always appear at cell position 20
-//        String paddedCount = getBlankSpaces(50 - description.length()); // Get blank spaces for padding
-//
-//        return description + paddedCount + count;
-//    }
 }
