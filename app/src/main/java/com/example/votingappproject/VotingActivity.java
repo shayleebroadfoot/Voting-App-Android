@@ -73,6 +73,8 @@ public class VotingActivity extends AppCompatActivity {
                         itemsAdapter.add(task);
                         //Logging the data from database
                         Log.d("Voting activity", "Task value is: " + task.getDescription());
+
+                        //Toast.makeText(VotingActivity.this, "Voted for: " + task.getDescription(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
