@@ -54,7 +54,7 @@ public class Choice
     {
         int fontSize = 10; // Font size of the text
         int descriptionWidth = estimateDescriptionWidth(fontSize);
-        int countXPosition = descriptionWidth + 70; // Move count by 50 pixels from the end of description
+        int countXPosition = descriptionWidth + 100; // Move count by 100 pixels from the end of description
         String paddedCount = getBlankSpaces(countXPosition); // Get blank spaces for padding
 
         return description + paddedCount + count;
