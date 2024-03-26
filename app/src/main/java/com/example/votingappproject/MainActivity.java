@@ -24,24 +24,27 @@ import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity
+{
+    private String username;
     private final ArrayList<Topic> topicsList = new ArrayList<>();
     private ArrayAdapter<Topic> topicsAdapter;
     private DatabaseReference databaseRef;
     private EditText newTopicEditText;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("MainActivity", "onCreate called");
+
+        username = getIntent().getStringExtra("ActiveUsername");
 
         newTopicEditText = findViewById(R.id.newTopicEditText);
         Button addTopicButton = findViewById(R.id.addTopicButton);
         ListView topicsListView = findViewById(R.id.topicsListView);
 
-        topicsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_gallery_item, topicsList);
+        topicsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, topicsList);
         topicsListView.setAdapter(topicsAdapter);
 
         databaseRef = FirebaseDatabase.getInstance().getReference("Topics");
@@ -61,12 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
         topicsListView.setOnItemClickListener((parent, view, position, id) -> {
             Topic selectedTopic = topicsList.get(position);
-            if (selectedTopic.getTopicID() != null) {
+            if (selectedTopic.getTopicID() != null)
+            {
                 Intent intent = new Intent(MainActivity.this, TopicsActivity.class);
                 intent.putExtra("topicID", selectedTopic.getTopicID());
                 intent.putExtra("topicDescription", selectedTopic.getDescription());
+                intent.putExtra("ActiveUsername", username);
                 startActivity(intent);
-            } else {
+            }
+            else {
                 Toast.makeText(MainActivity.this, "Error: Topic ID is missing.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -123,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, TopicsActivity.class);
             intent.putExtra("topicID", topicID);
             intent.putExtra("topicDescription", topicDescription);
+            intent.putExtra("ActiveUsername", username);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Couldn't get a unique ID for the topic.", Toast.LENGTH_SHORT).show();
@@ -135,7 +142,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    public void displayProfile(View view)
+    {
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        intent.putExtra("ActiveUsername", username);
+        startActivity(intent);
+        finish();
+    }
 }
-
-
-

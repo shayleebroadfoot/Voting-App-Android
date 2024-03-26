@@ -102,6 +102,7 @@
         android:backgroundTint="#32C8BB"
         android:text="Sign-up"
         android:textSize="24sp"
+        android:onClick="createUser"
         app:layout_constraintTop_toBottomOf="@+id/text_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

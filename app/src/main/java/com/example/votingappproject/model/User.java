@@ -1,21 +1,29 @@
 package com.example.votingappproject.Model;
 
-import androidx.annotation.NonNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class User
 {
-    public String username;
-    public String password;
+    private String username;
+    private String password;
+    private Map<String, Boolean> selectedTopicsIds;
     public User()
     {
-        this.username = "";
-        this.password = "";
+        this.selectedTopicsIds = new HashMap<>();
     }
-
     public User(String username, String password)
     {
         this.username= username;
         this.password = password;
+    }
+
+    public User(String username, String password, Map<String, Boolean> selectedTopicsIds)
+    {
+        this.username= username;
+        this.password = password;
+        this.selectedTopicsIds = selectedTopicsIds;
     }
 
     public String getUsername()
@@ -37,6 +45,16 @@ public class User
     {
         this.password = password;
     }
+
+    public void setSelectedTopicsIds(Map<String, Boolean> selectedTopicsIds)
+    {
+        this.selectedTopicsIds = selectedTopicsIds;
+    }
+    public Map<String, Boolean> getSelectedTopicsIds()
+    {
+        return selectedTopicsIds;
+    }
+
     @Override
     public String toString()
     {
