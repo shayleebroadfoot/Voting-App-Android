@@ -4,54 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue"
     tools:context=".ProfileActivity">
 
+    <!-- Logout Button -->
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:onClick="logout"
         android:text="Logout"
+        android:backgroundTint="#32C8BB"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:onClick="logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Dashboard Button -->
     <Button
         android:id="@+id/dashboardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:onClick="displayDashboard"
         android:text="Dashboard"
+        android:backgroundTint="#32C8BB"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:onClick="displayDashboard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Username TextView -->
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Username"
-        android:textSize="20sp"
+        android:textSize="50dp"
+        android:textStyle="bold"
+        android:textColor="@color/gold"
+        android:fontFamily="serif"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/logoutButton"
+        app:layout_constraintTop_toBottomOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="40dp"/>
 
+    <!-- Topics ListView -->
     <ListView
         android:id="@+id/topicsListView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="2dp"
         android:divider="@color/material_blue_grey_800"
         android:dividerHeight="1dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="2dp"
-        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/usernameTextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,3 @@
-
 package com.example.votingappproject;
 
 import android.content.Intent;
@@ -29,13 +28,12 @@ public class TopicsActivity extends AppCompatActivity {
     private String topicID;
     private String topicDescription;
     private String username;
-    private ArrayAdapter<Choice> adapter; // Use Choice ArrayAdapter for direct object manipulation
+    private ArrayAdapter<Choice> adapter;
     private ArrayList<Choice> choicesList = new ArrayList<>();
     private EditText choiceDescriptionEditText;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topics);
 
@@ -67,22 +65,44 @@ public class TopicsActivity extends AppCompatActivity {
 
         choicesListView.setOnItemClickListener((parent, view, position, id) -> {
             Choice selectedChoice = choicesList.get(position);
-            int newCount = selectedChoice.getCount() + 1;
             String choiceID = selectedChoice.getChoiceID();
 
-            // Increment choice count
-            databaseReference_choices.child(choiceID).child("count").setValue(newCount)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(TopicsActivity.this, "Voted for " + selectedChoice.getDescription(), Toast.LENGTH_SHORT).show();
-                        loadChoices(); // Refresh data to display updated count
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(TopicsActivity.this, "Error updating choice count.", Toast.LENGTH_SHORT).show());
+            DatabaseReference userRef = databaseReference_users.child("selectedTopicsIds").child(topicID);
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        // The user has not voted on this topic yet, proceed with updating
+                        voteOnChoice(choiceID, selectedChoice);
+                    } else {
+                        // The user has already voted on this topic
+                        Toast.makeText(TopicsActivity.this, "You have already voted on this topic.", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-            // Properly add topic ID under user's selected topics without overwriting
-            databaseReference_users.child("selectedTopicsIds").child(topicID).setValue(true)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(TopicsActivity.this, "Topic added to " + username, Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(TopicsActivity.this, "Error updating user information.", Toast.LENGTH_SHORT).show());
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(TopicsActivity.this, "Failed to check if user has voted.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+    }
+
+    private void voteOnChoice(String choiceID, Choice selectedChoice)
+    {
+        int newCount = selectedChoice.getCount() + 1;
+        // Increment choice count
+        databaseReference_choices.child(choiceID).child("count").setValue(newCount)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(TopicsActivity.this, "Voted for " + selectedChoice.getDescription(), Toast.LENGTH_SHORT).show();
+                    loadChoices(); // Refresh data to display updated count
+
+                    // Add topic ID to user's voted topics list
+                    databaseReference_users.child("selectedTopicsIds").child(topicID).setValue(true)
+                            .addOnSuccessListener(aVoid2 -> Toast.makeText(TopicsActivity.this, "Thanks for voting!", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(TopicsActivity.this, "Error updating your voted topics.", Toast.LENGTH_SHORT).show());
+                })
+                .addOnFailureListener(e -> Toast.makeText(TopicsActivity.this, "Error updating choice count.", Toast.LENGTH_SHORT).show());
     }
 
     private void loadChoices() {
@@ -106,15 +126,12 @@ public class TopicsActivity extends AppCompatActivity {
         });
     }
 
-    public void addNewChoice()
-    {
+    public void addNewChoice() {
         String description = choiceDescriptionEditText.getText().toString();
-        if (!description.isEmpty())
-        {
+        if (!description.isEmpty()) {
             String choiceID = databaseReference_choices.push().getKey();
             Choice newChoice = new Choice(0, choiceID, description);
-            if (choiceID != null)
-            {
+            if (choiceID != null) {
                 databaseReference_choices.child(choiceID).setValue(newChoice)
                         .addOnSuccessListener(aVoid -> {
                             choiceDescriptionEditText.setText("");
@@ -127,16 +144,14 @@ public class TopicsActivity extends AppCompatActivity {
         }
     }
 
-    public void displayDashboard(View view)
-    {
+    public void displayDashboard(View view) {
         Intent intent = new Intent(TopicsActivity.this, MainActivity.class);
         intent.putExtra("ActiveUsername", username);
         startActivity(intent);
         finish();
     }
 
-    public void showToast(String message)
-    {
+    public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
