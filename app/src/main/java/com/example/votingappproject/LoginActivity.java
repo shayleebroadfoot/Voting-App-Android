@@ -41,7 +41,8 @@ public class LoginActivity extends AppCompatActivity
         usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
                 // Check if user exists
                 if (dataSnapshot.exists()) {
                     // Get the User object
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity
                         // Passwords match, proceed to login
                         showToast("Login Successful");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("ActiveUsername", username);
                         startActivity(intent);
                         finish();
                     }

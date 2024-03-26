@@ -44,12 +44,13 @@ public class SignupActivity extends AppCompatActivity
                 Log.e("SignupActivity", "Failed to add user to database", e);
             });
 
-        displayDashboard();
+        displayDashboard(username);
     }
 
-    public void displayDashboard()
+    public void displayDashboard(String username)
     {
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+        intent.putExtra("ActiveUsername", username);
         startActivity(intent);
         finish();
     }
