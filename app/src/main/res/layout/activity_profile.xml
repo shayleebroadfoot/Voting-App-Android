@@ -37,6 +37,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    <Button-->
+<!--        android:id="@+id/changePasswordButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Change Password"-->
+<!--        android:onClick="changePassword"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/usernameTextView"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+
     <!-- Username TextView -->
     <TextView
         android:id="@+id/usernameTextView"
@@ -48,11 +60,26 @@
         android:textColor="@color/gold"
         android:fontFamily="serif"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/logoutButton"
+        app:layout_constraintTop_toBottomOf="@+id/settingsIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="5dp"/>
+
+    <ImageView
+        android:id="@+id/settingsIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/settingsicon"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/logoutButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="22dp"
+        android:onClick="displaySettingsActivity" />
 
     <!-- Topics ListView -->
     <ListView

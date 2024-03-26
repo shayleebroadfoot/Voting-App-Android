@@ -32,27 +32,6 @@ public class ProfileActivity extends AppCompatActivity
     private ArrayList<String> topicsDescriptions = new ArrayList<>();
     private ArrayAdapter<String> adapter;
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState)
-//    {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_profile);
-//
-//        username = getIntent().getStringExtra("ActiveUsername");
-//
-//        TextView usernameTextView = findViewById(R.id.usernameTextView);
-//
-//        // Set the TextView to display the username
-//        usernameTextView.setText(username);
-//
-//        ListView topicsListView = findViewById(R.id.topicsListView);
-//
-//        topicsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, topicsList);
-//        topicsListView.setAdapter(topicsAdapter);
-//
-//        databaseRef = FirebaseDatabase.getInstance().getReference("Topics");
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -127,6 +106,14 @@ public class ProfileActivity extends AppCompatActivity
     public void logout(View view)
     {
         Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void displaySettingsActivity(View view)
+    {
+        Intent intent = new Intent(ProfileActivity.this, SettingsActivity.class);
+        intent.putExtra("ActiveUsername", username);
         startActivity(intent);
         finish();
     }
