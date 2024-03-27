@@ -8,6 +8,9 @@ public class Topic
     String description;
     ArrayList<Choice> choicesList = new ArrayList<>();
 
+    int TopChoiceCount;
+    Choice TopChoice;
+
     public Topic()
     {
         this.topicID = "";
@@ -51,9 +54,37 @@ public class Topic
         this.choicesList = choicesList;
     }
 
+    public void setChoicesList1(ArrayList<Choice> choicesList, Choice topChoice, int topCount)
+    {
+        this.choicesList = choicesList;
+        this.TopChoice = topChoice;
+        this.TopChoiceCount = topCount;
+    }
+
+    private int estimateDescriptionWidth(int fontSize) {
+        // Assuming average width of a character for the given font size
+        int averageCharacterWidth = fontSize / 2; // You can adjust this value as needed
+        return description.length() * averageCharacterWidth;
+    }
+
+    private String getBlankSpaces(int pixels)
+    {
+        StringBuilder spaces = new StringBuilder();
+        for (int i = 0; i < pixels; i++)
+        {
+            spaces.append(" "); // Add blank spaces
+        }
+        return spaces.toString();
+    }
+
     @Override
     public String toString()
     {
-        return description;
+        int fontSize = 10; // Font size of the text
+        int descriptionWidth = estimateDescriptionWidth(fontSize);
+        int countXPosition = descriptionWidth + 50; // Move count by 100 pixels from the end of description
+        String paddedCount = getBlankSpaces(countXPosition); // Get blank spaces for padding
+
+        return description + paddedCount + "Top Choice: " + TopChoice.description + "    " + TopChoiceCount;
     }
 }

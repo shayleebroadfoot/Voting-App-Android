@@ -89,15 +89,27 @@ public class MainActivity extends AppCompatActivity
                     topic.setTopicID(snapshot.getKey());
                     topic.setDescription(snapshot.child("description").getValue(String.class));
 
+                    int ChoiceCount = 0;
+                    int TopChoiceCount = 0;
+                    Choice TopChoice = null;
+
                     // Deserialize choicesList from HashMap to ArrayList
                     ArrayList<Choice> choices = new ArrayList<>();
                     for (DataSnapshot choiceSnapshot : snapshot.child("choicesList").getChildren()) {
                         Choice choice = choiceSnapshot.getValue(Choice.class);
+                        ChoiceCount = choice.getCount();
+                        if (ChoiceCount > TopChoiceCount)
+                        {
+                            TopChoiceCount = ChoiceCount;
+                            TopChoice = choice;
+                        }
                         if (choice != null) {
                             choices.add(choice);
                         }
                     }
-                    topic.setChoicesList(choices);
+
+                    //topic.setChoicesList(choices);
+                    topic.setChoicesList1(choices, TopChoice, TopChoiceCount);
                     topicsList.add(topic);
                 }
                 topicsAdapter.notifyDataSetChanged();

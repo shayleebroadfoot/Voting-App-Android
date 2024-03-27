@@ -20,17 +20,19 @@
 
     <ListView
         android:id="@+id/choicesListView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="286dp"
         android:layout_weight="1"
+        android:background="@color/material_dynamic_primary80"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp" />
 
     <EditText
         android:id="@+id/newChoiceEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter new choice description"
+        android:textColorHint="@color/white"
         android:minHeight="48dp" />
 
     <Button
