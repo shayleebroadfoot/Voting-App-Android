@@ -6,7 +6,7 @@ public class Topic
 {
     String topicID;
     String description;
-    ArrayList<Choice> choicesList = new ArrayList<>();
+    ArrayList<Choice> choicesList;
 
     int TopChoiceCount;
     Choice TopChoice;
@@ -15,6 +15,7 @@ public class Topic
     {
         this.topicID = "";
         this.description = "";
+        this.choicesList = new ArrayList<>();
     }
 
     public Topic(String topicID, String description, ArrayList<Choice> choicesList)
@@ -77,14 +78,27 @@ public class Topic
         return spaces.toString();
     }
 
+//    @Override
+//    public String toString()
+//    {
+//        int fontSize = 10; // Font size of the text
+//        int descriptionWidth = estimateDescriptionWidth(fontSize);
+//        int countXPosition = descriptionWidth + 50; // Move count by 100 pixels from the end of description
+//        String paddedCount = getBlankSpaces(countXPosition); // Get blank spaces for padding
+//
+//        return description + paddedCount + "Top Choice: " + TopChoice.description + "    " + TopChoiceCount;
+//    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         int fontSize = 10; // Font size of the text
         int descriptionWidth = estimateDescriptionWidth(fontSize);
         int countXPosition = descriptionWidth + 50; // Move count by 100 pixels from the end of description
         String paddedCount = getBlankSpaces(countXPosition); // Get blank spaces for padding
 
-        return description + paddedCount + "Top Choice: " + TopChoice.description + "    " + TopChoiceCount;
+        // Check if TopChoice is null before attempting to access its description
+        String topChoiceDescription = (TopChoice != null) ? TopChoice.description : "None";
+        return description + paddedCount + "Top Choice: " + topChoiceDescription + "    " + TopChoiceCount;
     }
+
 }

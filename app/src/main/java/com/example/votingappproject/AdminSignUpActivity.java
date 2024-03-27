@@ -42,11 +42,11 @@ public class AdminSignUpActivity extends AppCompatActivity {
         EditText usernameEditText = findViewById(R.id.text_username);
         EditText passwordEditText = findViewById(R.id.text_password);
 
-        final String email = emailEditText.getText().toString().trim();
-        final String username = usernameEditText.getText().toString().trim();
-        final String password = passwordEditText.getText().toString();
+        String email = emailEditText.getText().toString().trim();
+        String username = usernameEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString();
 
-        if (!email.endsWith("@tru.com")) {
+        if (!email.endsWith("@tru.ca")) {
             showToast("Please enter a valid TRU email address.");
             return;
         }
@@ -68,7 +68,7 @@ public class AdminSignUpActivity extends AppCompatActivity {
                     showToast("Username already exists.");
                 } else {
                     verificationCode = generateVerificationCode();
-                    sendVerificationEmail(email); // Updated to not include username or password
+                    sendVerificationEmail(email);
                     promptForVerificationCode(email, username, password);
                 }
             }
@@ -101,7 +101,7 @@ public class AdminSignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void promptForVerificationCode(final String email, final String username, final String password) {
+    private void promptForVerificationCode(String email, String username, String password) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Verification Code");
 
@@ -133,7 +133,13 @@ public class AdminSignUpActivity extends AppCompatActivity {
 
     private void goToDashboard(String username) {
         Intent intent = new Intent(AdminSignUpActivity.this, MainActivity.class);
-        intent.putExtra("username", username);
+        intent.putExtra("ActiveUsername", username);
+        startActivity(intent);
+        finish();
+    }
+
+    public void displayLogin(View view) {
+        Intent intent = new Intent(AdminSignUpActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

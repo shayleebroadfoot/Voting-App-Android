@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
 
+import com.example.votingappproject.Model.Admin;
 import com.example.votingappproject.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity
                         public void onDataChange(@NonNull DataSnapshot adminSnapshot) {
                             if (adminSnapshot.exists()) {
                                 // Admin found, proceed with login
-                                validateUser(adminSnapshot, password);
+                                validateAdmin(adminSnapshot, password);
                             } else {
                                 // Admin not found, login failed
                                 showToast("Login Failed");
@@ -78,7 +79,7 @@ public class LoginActivity extends AppCompatActivity
         if (user != null && user.getPassword().equals(password)) {
             showToast("Login Successful");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("ActiveUsername", dataSnapshot.getKey());
+            intent.putExtra("ActiveUsername", user.getUsername());
             startActivity(intent);
             finish();
         } else {
@@ -86,6 +87,18 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
+    private void validateAdmin(DataSnapshot dataSnapshot, String password) {
+        Admin admin = dataSnapshot.getValue(Admin.class);
+        if (admin != null && admin.getPassword().equals(password)) {
+            showToast("Login Successful");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("ActiveUsername", admin.getUsername());
+            startActivity(intent);
+            finish();
+        } else {
+            showToast("Login Failed");
+        }
+    }
 
     public void showToast(String message)
     {
@@ -101,5 +114,3 @@ public class LoginActivity extends AppCompatActivity
         finish();
     }
 }
-
-
