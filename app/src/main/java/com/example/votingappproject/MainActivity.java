@@ -113,17 +113,19 @@ public class MainActivity extends AppCompatActivity
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     // Create a new Topic object
                     Topic topic = new Topic();
+                    ArrayList<Choice> choices = new ArrayList<>();
                     topic.setTopicID(snapshot.getKey());
                     topic.setDescription(snapshot.child("description").getValue(String.class));
-
+                    topic.setChoicesList(choices);
                     int ChoiceCount = 0;
                     int TopChoiceCount = 0;
                     Choice TopChoice = null;
 
                     // Deserialize choicesList from HashMap to ArrayList
-                    ArrayList<Choice> choices = new ArrayList<>();
+
                     for (DataSnapshot choiceSnapshot : snapshot.child("choicesList").getChildren()) {
                         Choice choice = choiceSnapshot.getValue(Choice.class);
+
                         ChoiceCount = choice.getCount();
                         if (ChoiceCount > TopChoiceCount)
                         {
