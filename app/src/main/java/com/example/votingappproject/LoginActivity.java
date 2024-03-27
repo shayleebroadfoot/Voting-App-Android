@@ -32,47 +32,60 @@ public class LoginActivity extends AppCompatActivity
         verifyLogin(usernameIn.getText().toString(), passwordIn.getText().toString());
     }
 
-    public void verifyLogin(String username, String password)
-    {
+    public void verifyLogin(String username, String password) {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://votingapp-6475d-default-rtdb.firebaseio.com/");
         DatabaseReference usersRef = database.getReference("Users");
+        DatabaseReference adminsRef = database.getReference("Admins"); // Reference to the Admins
 
-        // Query the database for a user with the given username
-        usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener()
-        {
+        // First, try to find the user in the Users node
+        usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                // Check if user exists
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Get the User object
-                    User user = dataSnapshot.getValue(User.class);
-                    if (user != null && user.getPassword().equals(password)) {
-                        // Passwords match, proceed to login
-                        showToast("Login Successful");
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("ActiveUsername", username);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        // Passwords do not match
-                        showToast("Login Failed");
-                    }
+                    // User found in Users node, proceed with login
+                    validateUser(dataSnapshot, password);
                 } else {
-                    // User does not exist
-                    showToast("Login Failed");
+                    // User not found in Users, try Admins node
+                    adminsRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot adminSnapshot) {
+                            if (adminSnapshot.exists()) {
+                                // Admin found, proceed with login
+                                validateUser(adminSnapshot, password);
+                            } else {
+                                // Admin not found, login failed
+                                showToast("Login Failed");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError adminError) {
+                            showToast("Database error, login failed.");
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Getting User failed, log a message
-                Log.w("LoginActivity", "loadUser:onCancelled", databaseError.toException());
                 showToast("Database error, login failed.");
             }
         });
     }
+
+    private void validateUser(DataSnapshot dataSnapshot, String password) {
+        User user = dataSnapshot.getValue(User.class);
+        if (user != null && user.getPassword().equals(password)) {
+            showToast("Login Successful");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("ActiveUsername", dataSnapshot.getKey());
+            startActivity(intent);
+            finish();
+        } else {
+            showToast("Login Failed");
+        }
+    }
+
 
     public void showToast(String message)
     {

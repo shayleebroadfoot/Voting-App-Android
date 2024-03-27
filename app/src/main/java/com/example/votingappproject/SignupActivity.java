@@ -100,4 +100,11 @@ public class SignupActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    public void displayAdminSignUp(View view)
+    {
+        Intent intent = new Intent(SignupActivity.this, AdminSignUpActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

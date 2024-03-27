@@ -3,6 +3,7 @@ package com.example.votingappproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.votingappproject.Model.Choice;
 import com.google.firebase.database.DataSnapshot;
@@ -86,6 +88,36 @@ public class TopicsActivity extends AppCompatActivity {
                 }
             });
         });
+
+        // Long-press listener for admin to delete choices
+        choicesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Choice selectedChoice = choicesList.get(position);
+                checkIfUserIsAdmin(username, isAdmin -> {
+                    if (isAdmin) {
+                        showDeleteConfirmation(selectedChoice);
+                    } else {
+                        showToast("Only admins can delete choices.");
+                    }
+                });
+                return true; // Consumes the event, preventing onItemClick from being triggered
+            }
+        });
+        choicesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Choice selectedChoice = choicesList.get(position);
+                checkIfUserIsAdmin(username, isAdmin -> {
+                    if (isAdmin) {
+                        showDeleteConfirmation(selectedChoice);
+                    } else {
+                        showToast("Only admins can delete choices.");
+                    }
+                });
+                return true;
+            }
+        });
     }
 
     private void voteOnChoice(String choiceID, Choice selectedChoice)
@@ -99,7 +131,6 @@ public class TopicsActivity extends AppCompatActivity {
 
                     // Add topic ID to user's voted topics list
                     databaseReference_users.child("selectedTopicsIds").child(topicID).setValue(true)
-                            .addOnSuccessListener(aVoid2 -> Toast.makeText(TopicsActivity.this, "Thanks for voting!", Toast.LENGTH_SHORT).show())
                             .addOnFailureListener(e -> Toast.makeText(TopicsActivity.this, "Error updating your voted topics.", Toast.LENGTH_SHORT).show());
                 })
                 .addOnFailureListener(e -> Toast.makeText(TopicsActivity.this, "Error updating choice count.", Toast.LENGTH_SHORT).show());
@@ -141,6 +172,47 @@ public class TopicsActivity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(TopicsActivity.this, "Description cannot be empty.", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void checkIfUserIsAdmin(String username, final AdminCheckCallback callback) {
+        DatabaseReference adminRef = FirebaseDatabase.getInstance().getReference("Admins");
+        adminRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                callback.onChecked(dataSnapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showToast("Failed to check admin status.");
+            }
+        });
+    }
+    interface AdminCheckCallback {
+        void onChecked(boolean isAdmin);
+    }
+
+    // Show confirmation dialog for deleting a choice
+    private void showDeleteConfirmation(final Choice choice) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Choice")
+                .setMessage("Are you sure you want to delete this choice?")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteChoice(choice.getChoiceID()))
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+    }
+
+    // Method to delete a choice from the database
+    private void deleteChoice(String choiceID) {
+        if (choiceID != null && !choiceID.trim().isEmpty()) {
+            databaseReference_choices.child(choiceID).removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        showToast("Choice deleted successfully.");
+                        loadChoices(); // Refresh the choices list
+                    })
+                    .addOnFailureListener(e -> showToast("Failed to delete choice."));
+        } else {
+            showToast("Error: Choice ID is missing.");
         }
     }
 
